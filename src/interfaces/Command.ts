@@ -5,5 +5,5 @@ import {ChatInputCommandInteraction,
 
 export interface ICommand {
     data: SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder | any;
-    excute(interaction: ChatInputCommandInteraction): Promise<void>;
+    execute(interaction: ChatInputCommandInteraction): Promise<void>;
 }
