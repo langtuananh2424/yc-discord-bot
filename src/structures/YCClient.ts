@@ -27,7 +27,7 @@ export class YCClient extends Client {
                 const filePath = path.join(commandsPath, file);
                 const command: ICommand = (await import(filePath)).default;
 
-                if(command.data && command.excute) {
+                if('data' in command && 'execute' in command) {
                     this.commands.set(command.data.name, command);
                 }
             }
