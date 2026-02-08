@@ -1,4 +1,4 @@
-import { ASSETS } from "./constants/assests";
+import { ASSETS } from "./constants/assets";
 
 export const BOT_CONFIG = {
     prefix: 'yc',

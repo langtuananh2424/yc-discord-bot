@@ -1,8 +1,8 @@
 import { Events, GuildMember, TextChannel, EmbedBuilder, AttachmentBuilder } from 'discord.js';
 import { IEvent } from '../interfaces/Event';
 import { BOT_CONFIG } from '../config';
-import { ASSETS } from '../constants/assests';
-import * as fs from 'fs';
+import { getImageBuffer } from '../utils/imageHelper';
+import { getWelcomeGif } from '../utils/randomGifHelper';
 
 const GuildMemberAddEvent: IEvent = {
     name: Events.GuildMemberAdd,
@@ -13,21 +13,7 @@ const GuildMemberAddEvent: IEvent = {
         const channel = member.guild.channels.cache.get(config.channelId) as TextChannel;
         if (!channel) return;
 
-        let avatarData: string | Buffer | null = null;
-        
-        if (config.webhookAvatar.startsWith('http')) {
-            // Nếu là link ảnh từ internet
-            avatarData = config.webhookAvatar;
-        } else {
-            // Nếu là đường dẫn file cục bộ
-            try {
-                if (fs.existsSync(config.webhookAvatar)) {
-                    avatarData = fs.readFileSync(config.webhookAvatar);
-                }
-            } catch (err) {
-                console.error('Không thể đọc file avatar local:', err);
-            }
-        }
+        const { attachment, embedImageUrl } = getWelcomeGif();
 
         // Thay thế các placeholder trong tin nhắn
         const welcomeMessage = config.message
@@ -36,9 +22,10 @@ const GuildMemberAddEvent: IEvent = {
 
         // Tạo Embed theo phong cách Webhooks
         const welcomeEmbed = new EmbedBuilder()
-            .setColor(BOT_CONFIG.colors.welcome)
+            .setColor(BOT_CONFIG.colors.welcome as any)
             .setTitle(config.title)
             .setDescription(welcomeMessage)
+            .setImage(embedImageUrl)
             .setTimestamp();
 
         if (config.thumbnail) {
@@ -51,20 +38,23 @@ const GuildMemberAddEvent: IEvent = {
             const webhooks = await channel.fetchWebhooks();
             let webhook = webhooks.find(wh => wh.name === config.webhookName);
 
+            const avatarBuffer = await getImageBuffer(config.webhookAvatar);
+
             if (!webhook) {
                 webhook = await channel.createWebhook({
                     name: config.webhookName,
-                    avatar: avatarData, 
+                    avatar: avatarBuffer, 
                 });
-            } else {
-                await webhook.edit({
-                    avatar: avatarData
-                });
+            } else if (avatarBuffer) {
+                // Chỉ edit nếu bạn thực sự muốn thay đổi avatar thường xuyên.
+                // Nếu logo đã ổn định, bạn có thể comment dòng dưới này để tránh Rate Limit.
+                await webhook.edit({ avatar: avatarBuffer });
             }
 
             // Gửi tin nhắn thông qua Webhook
-            await webhook.send({
+            await webhook?.send({
                 embeds: [welcomeEmbed],
+                files: attachment ? [attachment] : [],
                 username: config.webhookName
             });
 
