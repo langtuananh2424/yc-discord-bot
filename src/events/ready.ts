@@ -8,3 +8,5 @@ const ReadyEvent: IEvent = {
         console.log(`YC Bot đã sẵn sàng! Đăng nhập dưới tên: ${client.user?.tag}`);
     }
 }
+
+export default ReadyEvent;

@@ -1,9 +1,10 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
 import { ICommand } from '../../interfaces/Command';
+import { BOT_CONFIG } from '../../config';
 
 const PingCommand: ICommand = {
     data: new SlashCommandBuilder()
-        .setName('ping')
+        .setName(`${BOT_CONFIG.prefix}-ping`)
         .setDescription('Kiểm tra độ trễ của YC Bot'),
     
     async execute(interaction: ChatInputCommandInteraction) {
