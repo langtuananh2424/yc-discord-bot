@@ -11,7 +11,8 @@ export class YCClient extends Client {
         super({
             intents: [
                 GatewayIntentBits.Guilds,
-                GatewayIntentBits.GuildMessages
+                GatewayIntentBits.GuildMessages,
+                GatewayIntentBits.GuildMembers
             ]
         });
     }
