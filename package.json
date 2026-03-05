@@ -4,7 +4,7 @@
   "description": "All-in-one Discord Bot",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "nodemon --exec ts-node src/index.ts",
+    "dev": "nodemon --ignore 'assets/data/*' --exec ts-node src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
     "register": "ts-node src/deploy-commands.ts"

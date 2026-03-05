@@ -10,7 +10,7 @@ const TestWelcomeCommand: ICommand = {
     data: new SlashCommandBuilder()
         .setName(`${BOT_CONFIG.prefix}-test-welcome`)
         .setDescription('Giả lập sự kiện chào mừng thành viên mới')
-        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild | PermissionFlagsBits.ManageChannels),
     
     async execute(interaction: ChatInputCommandInteraction) {
     const member = interaction.member;

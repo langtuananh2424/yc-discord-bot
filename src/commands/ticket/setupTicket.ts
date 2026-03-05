@@ -1,5 +1,6 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction, PermissionFlagsBits, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, TextChannel, ChannelType} from 'discord.js';
 import { ICommand } from '../../interfaces/Command';
+import { saveGuildConfig } from '../../utils/guildConfigHelper';
 
 const SetupTicketCommand: ICommand = {
     data: new SlashCommandBuilder()
@@ -24,14 +25,15 @@ const SetupTicketCommand: ICommand = {
                 .setDescription('Kênh ẩn dùng để lưu trữ file lịch sử Ticket')
                 .addChannelTypes(ChannelType.GuildText)
                 .setRequired(true))
-        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild | PermissionFlagsBits.ManageChannels),
 
     async execute(interaction: ChatInputCommandInteraction) {
         const channel = interaction.options.getChannel('channel') as TextChannel;
         const category = interaction.options.getChannel('category');
         const role = interaction.options.getRole('support-role');
         const logChannel = interaction.options.getChannel('ticket-log');
-
+        const isSuccess = saveGuildConfig(interaction.guildId!, { ticketLogChannelId: logChannel?.id });
+        
         const embed = new EmbedBuilder()
             .setTitle('🎫 Hệ Thống Hỗ Trợ YC')
             .setDescription('Nhấn vào nút bên dưới để tạo Ticket. Nhân viên của chúng tôi sẽ hỗ trợ bạn sớm nhất có thể!')

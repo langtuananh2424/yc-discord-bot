@@ -9,7 +9,7 @@ export const BOT_CONFIG = {
     },
     welcome: {
         enabled: true,
-        channelId: '1469951916208427266',
+        channelId: '1086211595446784020',
         webhookName: 'YC Welcome Bot',
         webhookAvatar: ASSETS.LOGO_PATH,
         defaultTitle: 'Chào mừng thành viên mới!',
