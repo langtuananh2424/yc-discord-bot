@@ -12,8 +12,10 @@ export const BOT_CONFIG = {
         channelId: '1469951916208427266',
         webhookName: 'YC Welcome Bot',
         webhookAvatar: ASSETS.LOGO_PATH,
-        title: 'Chào mừng thành viên mới!',
-        message: 'Chào mừng {user} đã gia nhập server **{guild}**! Chúc bạn có những giây phút vui vẻ.',
+        defaultTitle: 'Chào mừng thành viên mới!',
+        defaultMessage: 'Chào mừng {user} đã gia nhập server **{guild}**! Chúc bạn có những giây phút vui vẻ.',
         thumbnail: true
-    }
+    },
+    ID_FOLDER_DRIVE: process.env.DRIVE_FOLDER_ID,
+    // ID_SUPPORT_DIRECTORY: '1089855669764632647'
 };

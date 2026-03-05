@@ -5,17 +5,16 @@ import {
     GuildMember 
 } from 'discord.js';
 import { ICommand } from '../../interfaces/Command';
+import { BOT_CONFIG } from '../../config';
 const TestWelcomeCommand: ICommand = {
     data: new SlashCommandBuilder()
-        .setName('test-welcome')
+        .setName(`${BOT_CONFIG.prefix}-test-welcome`)
         .setDescription('Giả lập sự kiện chào mừng thành viên mới')
-        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator), // Chỉ Admin mới dùng được
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     
     async execute(interaction: ChatInputCommandInteraction) {
     const member = interaction.member;
 
-    // Kiểm tra xem member có tồn tại và có phải là GuildMember thực thụ không
-    // (Tránh trường hợp null hoặc APIInteractionGuildMember)
     if (member && 'guild' in member) {
         // Ép kiểu hoặc truyền trực tiếp sau khi đã check 'guild' in member
         interaction.client.emit('guildMemberAdd', member as GuildMember);

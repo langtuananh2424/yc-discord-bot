@@ -3,6 +3,7 @@ import { IEvent } from '../interfaces/Event';
 import { BOT_CONFIG } from '../config';
 import { getImageBuffer } from '../utils/imageHelper';
 import { getWelcomeGif } from '../utils/randomGifHelper';
+import { getRandomWelcomeContent } from '../utils/welcomeContentHelper';
 
 const GuildMemberAddEvent: IEvent = {
     name: Events.GuildMemberAdd,
@@ -14,16 +15,18 @@ const GuildMemberAddEvent: IEvent = {
         if (!channel) return;
 
         const { attachment, embedImageUrl } = getWelcomeGif();
+        const content = getRandomWelcomeContent();
 
+        const welcomeTitle = content.title;
         // Thay thế các placeholder trong tin nhắn
-        const welcomeMessage = config.message
+        const welcomeMessage = content.message
             .replace('{user}', member.toString())
             .replace('{guild}', member.guild.name);
-
+        
         // Tạo Embed theo phong cách Webhooks
         const welcomeEmbed = new EmbedBuilder()
             .setColor(BOT_CONFIG.colors.welcome as any)
-            .setTitle(config.title)
+            .setTitle(welcomeTitle)
             .setDescription(welcomeMessage)
             .setImage(embedImageUrl)
             .setTimestamp();
@@ -46,8 +49,6 @@ const GuildMemberAddEvent: IEvent = {
                     avatar: avatarBuffer, 
                 });
             } else if (avatarBuffer) {
-                // Chỉ edit nếu bạn thực sự muốn thay đổi avatar thường xuyên.
-                // Nếu logo đã ổn định, bạn có thể comment dòng dưới này để tránh Rate Limit.
                 await webhook.edit({ avatar: avatarBuffer });
             }
 

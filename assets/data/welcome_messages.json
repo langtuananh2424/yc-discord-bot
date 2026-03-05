@@ -1,0 +1,14 @@
+[
+  {
+    "title": "Chào mừng thành viên mới!",
+    "message": "Chào mừng {user} đã gia nhập server **{guild}**! Chúc bạn có những giây phút vui vẻ."
+  },
+  {
+    "title": "Một người bạn mới xuất hiện!",
+    "message": "Ê kìa, {user} vừa mới hạ cánh xuống **{guild}** nè. Mọi người ra chào đi!"
+  },
+  {
+    "title": "Welcome to YC Craft!",
+    "message": "Rất vui được gặp bạn, {user}. Bạn đã sẵn sàng khám phá thế giới của **{guild}** chưa?"
+  }
+]
