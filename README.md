@@ -47,7 +47,7 @@ Mỗi khi thêm lệnh mới, chạy lệnh này để đẩy cấu trúc lên D
 
 ## ☁️ Hướng Dẫn Hostinging (Hiện tại đang host ở bot-hosting.net)
 
-1. **Chạy lệnh build trên máy tính:**net
+1. **Chạy lệnh build trên máy tính:**
 
 2. **Nén các file/thư mục sau thành file .zip:**
 
