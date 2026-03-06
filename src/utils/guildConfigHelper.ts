@@ -6,6 +6,7 @@ const CONFIG_PATH = path.join(process.cwd(), 'assets/data/guild_config.json');
 export interface IGuildConfig {
     welcomeChannelId?: string;
     ticketLogChannelId?: string;
+    jtcChannelId?: string;
     // Sau có thể thêm ticketLogChannelId, supportRoleId
 }
 

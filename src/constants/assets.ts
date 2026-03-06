@@ -14,5 +14,6 @@ export const ASSETS = {
     NAMES: {
         LOGO: 'logo.png',
         WELCOME_ATTACHMENT: 'welcome_image.gif'
-    }
+    },
+    VERIFY_GIFS: path.join(GIFS_PATH, 'welcome-gif-3.gif')
 } as const;

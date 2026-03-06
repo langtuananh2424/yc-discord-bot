@@ -1,7 +1,9 @@
-import { Events, Interaction, ButtonInteraction } from 'discord.js';
+import { Events, Interaction, ButtonInteraction, VoiceChannel, MessageFlags } from 'discord.js';
 import { IEvent } from '../interfaces/Event';
 import { YCClient } from '../structures/YCClient';
 import { handleCreateTicket, handleSaveTicket, handleCloseTicket, handleDeleteTicket } from '../utils/ticketHandlers';
+import { handleVerifyRole } from '../utils/verifyHandlers';
+import { handleVoiceButtons } from '../utils/voiceHandlers';
 
 const InteractionCreateEvent: IEvent = {
     name: Events.InteractionCreate,
@@ -51,6 +53,37 @@ const InteractionCreateEvent: IEvent = {
                 case 'ticket_delete':
                     await handleDeleteTicket(interaction as ButtonInteraction);
                     break;
+            }
+
+            if (customId.startsWith('verify_role_')) {
+                const roleId = customId.split('_')[2];
+
+                // Gọi hàm từ file utils và truyền dữ liệu sang
+                await handleVerifyRole(interaction as ButtonInteraction, roleId);
+                return;
+            }
+
+            if (customId.startsWith('vc_')) {
+                await handleVoiceButtons(interaction as ButtonInteraction);
+                return;
+            }
+        }
+
+        if (interaction.isModalSubmit()) {
+            const channel = interaction.channel as VoiceChannel;
+            if (interaction.customId === 'modal_vc_rename') {
+                const newName = interaction.fields.getTextInputValue('new_name');
+                await channel.setName(newName);
+                await interaction.reply({ content: `✅ Đã đổi tên phòng thành: **${newName}**`, flags: MessageFlags.Ephemeral });
+            }
+            if (interaction.customId === 'modal_vc_limit') {
+                const newLimit = parseInt(interaction.fields.getTextInputValue('new_limit'));
+                if (isNaN(newLimit) || newLimit < 0 || newLimit > 99) {
+                    await interaction.reply({ content: '❌ Số lượng không hợp lệ! Vui lòng nhập từ 0 đến 99.', flags: MessageFlags.Ephemeral });
+                    return;
+                }
+                await channel.setUserLimit(newLimit);
+                await interaction.reply({ content: `✅ Đã giới hạn phòng: **${newLimit === 0 ? 'Vô hạn' : `${newLimit} người`}**`, flags: MessageFlags.Ephemeral });
             }
         }
     }
