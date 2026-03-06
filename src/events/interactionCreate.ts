@@ -4,6 +4,7 @@ import { YCClient } from '../structures/YCClient';
 import { handleCreateTicket, handleSaveTicket, handleCloseTicket, handleDeleteTicket } from '../utils/ticketHandlers';
 import { handleVerifyRole } from '../utils/verifyHandlers';
 import { handleVoiceButtons } from '../utils/voiceHandlers';
+import { handleMarketBuy, handleMarketConfirm, handleMarketTicketControls, handleMarketPostModal } from '../utils/marketHandlers';
 
 const InteractionCreateEvent: IEvent = {
     name: Events.InteractionCreate,
@@ -27,7 +28,7 @@ const InteractionCreateEvent: IEvent = {
         if (interaction.isButton()) {
             const { customId, guild } = interaction;
             if (!guild) return;
-
+            
             // Xử lý tạo Ticket
             if (customId.startsWith('create_ticket_')) {
                 const parts = customId.split('_'); 
@@ -67,16 +68,44 @@ const InteractionCreateEvent: IEvent = {
                 await handleVoiceButtons(interaction as ButtonInteraction);
                 return;
             }
+
+            // NÚT MUA HÀNG MARKET
+            if (customId.startsWith('market_buy_')) {
+                const parts = customId.split('_');
+                const postId = parts[2];
+                const sellerId = parts[3];
+                await handleMarketBuy(interaction as ButtonInteraction, postId, sellerId);
+                return;
+            }
+
+            // NÚT XÁC NHẬN GIAO DỊCH TRUNG GIAN
+            if (customId.startsWith('market_confirm_')) {
+                await handleMarketConfirm(interaction as ButtonInteraction);
+                return;
+            }
+
+            if (['market_close', 'market_transcript', 'market_delete'].includes(customId)) {
+                await handleMarketTicketControls(interaction as ButtonInteraction);
+            return;
+            }
+
+            
         }
 
         if (interaction.isModalSubmit()) {
-            const channel = interaction.channel as VoiceChannel;
+            
+            // XỬ LÝ MODAL ĐỔI TÊN PHÒNG VOICE
             if (interaction.customId === 'modal_vc_rename') {
+                const channel = interaction.channel as VoiceChannel; // 👈 Kéo vào trong này
                 const newName = interaction.fields.getTextInputValue('new_name');
                 await channel.setName(newName);
                 await interaction.reply({ content: `✅ Đã đổi tên phòng thành: **${newName}**`, flags: MessageFlags.Ephemeral });
+                return; // 👈 Thêm return để chốt sổ, dừng quét các lệnh dưới
             }
+
+            // XỬ LÝ MODAL GIỚI HẠN NGƯỜI VOICE
             if (interaction.customId === 'modal_vc_limit') {
+                const channel = interaction.channel as VoiceChannel; // 👈 Kéo vào trong này
                 const newLimit = parseInt(interaction.fields.getTextInputValue('new_limit'));
                 if (isNaN(newLimit) || newLimit < 0 || newLimit > 99) {
                     await interaction.reply({ content: '❌ Số lượng không hợp lệ! Vui lòng nhập từ 0 đến 99.', flags: MessageFlags.Ephemeral });
@@ -84,8 +113,17 @@ const InteractionCreateEvent: IEvent = {
                 }
                 await channel.setUserLimit(newLimit);
                 await interaction.reply({ content: `✅ Đã giới hạn phòng: **${newLimit === 0 ? 'Vô hạn' : `${newLimit} người`}**`, flags: MessageFlags.Ephemeral });
+                return;
+            }
+
+            // 3. XỬ LÝ MODAL ĐĂNG BÀI MARKET
+            if (interaction.customId === 'market_post_modal') {
+                await handleMarketPostModal(interaction);
+                return;
             }
         }
+
+        
     }
 };
 

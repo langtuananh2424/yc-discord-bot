@@ -2,6 +2,16 @@
     "699269562520043700": {
         "welcomeChannelId": "1086211595446784020",
         "ticketLogChannelId": "1479113054624153753",
-        "jtcChannelId": "1086250369841111173"
+        "jtcChannelId": "1086250369841111173",
+        "marketChannelId": "1479519981032177836",
+        "marketCategoryId": "1089855669764632647",
+        "marketSupervisorRoleId": "1479550250019459372",
+        "marketArchiveChannelId": "1479520487817216151",
+        "marketLogChannelId": "1479551282288001114",
+        "marketSellerRoleId": "1235778815599317003",
+        "marketMmBankName": "TPBANK",
+        "marketMmBankInfo": "99335036556",
+        "marketMmBankOwner": "PHAM GIA KIEN",
+        "marketMmTransferContent": "buy"
     }
 }
