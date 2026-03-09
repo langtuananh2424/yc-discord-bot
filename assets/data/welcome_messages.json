@@ -5,10 +5,42 @@
   },
   {
     "title": "Một người bạn mới xuất hiện!",
-    "message": "Ê kìa, {user} vừa mới hạ cánh xuống **{guild}** nè. Mọi người ra chào đi!"
+    "message": "Oh, {user} vừa mới hạ cánh xuống **{guild}** nè. Mọi người ra chào đi!"
   },
   {
     "title": "Welcome to YC Craft!",
     "message": "Rất vui được gặp bạn, {user}. Bạn đã sẵn sàng khám phá thế giới của **{guild}** chưa?"
+  },
+  {
+    "title": "Cảnh báo có người lạ!",
+    "message": "{user} vừa spawn vào **{guild}**. Anh em nhanh tay cất hết kim cương và khối vàng đi nhé!"
+  },
+  {
+    "title": "Thêm một gạch thủ hội tụ!",
+    "message": "Chào mừng {user} xách cúp đến với **{guild}**. Chúc bạn xây được những công trình để đời nhé!"
+  },
+  {
+    "title": "Ai đó vừa rơi từ trên trời xuống!",
+    "message": "May mà có xô nước đỡ lại kịp! Chào mừng {user} đã hạ cánh an toàn tại **{guild}**."
+  },
+  {
+    "title": "Trải thảm đỏ đón người mới!",
+    "message": "Mọi người dẹp đường cho {user} bước vào **{guild}** nào! Nhớ đọc kỹ luật trước khi đi quẩy nhé."
+  },
+  {
+    "title": "Suỵt! Đừng làm ồn...",
+    "message": "{user} vừa lén lút lẻn vào **{guild}**. Cẩn thận bước nhầm vào bãi mìn của Creeper nha!"
+  },
+  {
+    "title": "Quán trà đá đón khách!",
+    "message": "Kéo ghế ra rớt liêm sỉ thôi {user} ơi! Chào mừng bạn đến với tụ điểm tấu hài **{guild}**."
+  },
+  {
+    "title": "Tân binh gia nhập tổ đội!",
+    "message": "Hệ thống vừa cấp cho {user} một thanh kiếm gỗ và một ổ bánh mì. Chúc bạn sinh tồn vui vẻ tại **{guild}**!"
+  },
+  {
+    "title": "Cổng dịch chuyển vừa kích hoạt!",
+    "message": "Một thế lực bí ẩn vừa hút {user} vào **{guild}**. Thôi lỡ vào rồi thì ở lại chơi với anh em luôn nhé!"
   }
 ]

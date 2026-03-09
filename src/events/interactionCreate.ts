@@ -1,10 +1,11 @@
-import { Events, Interaction, ButtonInteraction, VoiceChannel, MessageFlags } from 'discord.js';
+import { Events, Interaction, ButtonInteraction } from 'discord.js';
 import { IEvent } from '../interfaces/Event';
 import { YCClient } from '../structures/YCClient';
 import { handleCreateTicket, handleSaveTicket, handleCloseTicket, handleDeleteTicket } from '../utils/ticketHandlers';
 import { handleVerifyRole } from '../utils/verifyHandlers';
-import { handleVoiceButtons } from '../utils/voiceHandlers';
+import { handleVoiceButtons, handleVoiceLimitModal, handleVoiceRenameModal } from '../utils/voiceHandlers';
 import { handleMarketBuy, handleMarketConfirm, handleMarketTicketControls, handleMarketPostModal } from '../utils/marketHandlers';
+import { handleEmbedMakerModal } from '../utils/embedHandlers';
 
 const InteractionCreateEvent: IEvent = {
     name: Events.InteractionCreate,
@@ -93,34 +94,28 @@ const InteractionCreateEvent: IEvent = {
         }
 
         if (interaction.isModalSubmit()) {
-            
-            // XỬ LÝ MODAL ĐỔI TÊN PHÒNG VOICE
-            if (interaction.customId === 'modal_vc_rename') {
-                const channel = interaction.channel as VoiceChannel; // 👈 Kéo vào trong này
-                const newName = interaction.fields.getTextInputValue('new_name');
-                await channel.setName(newName);
-                await interaction.reply({ content: `✅ Đã đổi tên phòng thành: **${newName}**`, flags: MessageFlags.Ephemeral });
-                return; // 👈 Thêm return để chốt sổ, dừng quét các lệnh dưới
-            }
+            switch (interaction.customId) {
+                case 'modal_vc_rename':
+                    await handleVoiceRenameModal(interaction);
+                    break;
 
-            // XỬ LÝ MODAL GIỚI HẠN NGƯỜI VOICE
-            if (interaction.customId === 'modal_vc_limit') {
-                const channel = interaction.channel as VoiceChannel; // 👈 Kéo vào trong này
-                const newLimit = parseInt(interaction.fields.getTextInputValue('new_limit'));
-                if (isNaN(newLimit) || newLimit < 0 || newLimit > 99) {
-                    await interaction.reply({ content: '❌ Số lượng không hợp lệ! Vui lòng nhập từ 0 đến 99.', flags: MessageFlags.Ephemeral });
-                    return;
-                }
-                await channel.setUserLimit(newLimit);
-                await interaction.reply({ content: `✅ Đã giới hạn phòng: **${newLimit === 0 ? 'Vô hạn' : `${newLimit} người`}**`, flags: MessageFlags.Ephemeral });
-                return;
-            }
+                case 'modal_vc_limit':
+                    await handleVoiceLimitModal(interaction);
+                    break;
 
-            // 3. XỬ LÝ MODAL ĐĂNG BÀI MARKET
-            if (interaction.customId === 'market_post_modal') {
-                await handleMarketPostModal(interaction);
-                return;
+                case 'market_post_modal':
+                    await handleMarketPostModal(interaction);
+                    break;
+
+                case 'embed_maker_modal':
+                    await handleEmbedMakerModal(interaction);
+                    break;
+                    
+                default:
+                    console.warn(`Chưa có handler cho Modal: ${interaction.customId}`);
+                    break;
             }
+            return;
         }
 
         

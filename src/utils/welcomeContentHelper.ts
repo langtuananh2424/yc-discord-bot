@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { getRandomElement } from './randomHelper';
-import { BOT_CONFIG } from '../config'; // Import config để lấy fallback
+import { BOT_CONFIG } from '../config';
 
 interface IWelcomeContent {
     title: string;

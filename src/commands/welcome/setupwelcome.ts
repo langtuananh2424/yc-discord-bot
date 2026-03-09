@@ -6,7 +6,7 @@ import {
     ChannelType
 } from 'discord.js';
 import { ICommand } from '../../interfaces/Command';
-import { saveGuildConfig } from '../../utils/guildConfigHelper'; // Import Helper
+import { saveGuildConfig } from '../../utils/guildConfigHelper';
 
 const SetupWelcomeCommand: ICommand = {
     data: new SlashCommandBuilder()

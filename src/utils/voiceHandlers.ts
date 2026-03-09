@@ -1,4 +1,4 @@
-import { ButtonInteraction, VoiceChannel, PermissionFlagsBits, MessageFlags, ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
+import { ButtonInteraction, VoiceChannel, PermissionFlagsBits, MessageFlags, ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ModalSubmitInteraction } from 'discord.js';
 
 export async function handleVoiceButtons(interaction: ButtonInteraction) {
     const channel = interaction.channel as VoiceChannel;
@@ -65,4 +65,25 @@ export async function handleVoiceButtons(interaction: ButtonInteraction) {
         console.error('Lỗi khi xử lý nút Voice:', error);
         await interaction.reply({ content: '❌ Có lỗi xảy ra. Hãy chắc chắn Bot có quyền Quản lý Kênh.', flags: MessageFlags.Ephemeral });
     }
+}
+
+export async function handleVoiceRenameModal(interaction: ModalSubmitInteraction) {
+    const channel = interaction.channel as VoiceChannel;
+    const newName = interaction.fields.getTextInputValue('new_name');
+    await channel.setName(newName);
+    await interaction.reply({ content: `✅ Đã đổi tên phòng thành: **${newName}**`, flags: MessageFlags.Ephemeral });
+}
+
+// XỬ LÝ GIỚI HẠN NGƯỜI PHÒNG VOICE
+export async function handleVoiceLimitModal(interaction: ModalSubmitInteraction) {
+    const channel = interaction.channel as VoiceChannel;
+    const newLimit = parseInt(interaction.fields.getTextInputValue('new_limit'));
+    
+    if (isNaN(newLimit) || newLimit < 0 || newLimit > 99) {
+        await interaction.reply({ content: '❌ Số lượng không hợp lệ! Vui lòng nhập từ 0 đến 99.', flags: MessageFlags.Ephemeral });
+        return;
+    }
+    
+    await channel.setUserLimit(newLimit);
+    await interaction.reply({ content: `✅ Đã giới hạn phòng: **${newLimit === 0 ? 'Vô hạn' : `${newLimit} người`}**`, flags: MessageFlags.Ephemeral });
 }

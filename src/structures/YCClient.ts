@@ -25,7 +25,7 @@ export class YCClient extends Client {
 
         for(const folder of commandFolders) {
             const commandsPath = path.join(foldersPath, folder);
-            const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.ts'));
+            const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
             for(const file of commandFiles) {
                 const filePath = path.join(commandsPath, file);
@@ -42,7 +42,7 @@ export class YCClient extends Client {
 
     public async loadEvents() {
         const eventsPath = path.join(__dirname, '../events');
-        const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.ts'));
+        const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
 
         for(const file of eventFiles) {
             const filePath = path.join(eventsPath, file);
