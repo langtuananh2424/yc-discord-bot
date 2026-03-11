@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Bảng lưu trữ Người chơi
+model User {
+  id               String   @id // Chính là ID Discord của người dùng
+  coins            Float    @default(0.0) // Số dư YC Coin
+  energy           Int      @default(64)  // Thể lực đào khoáng (Max 64)
+  lastEnergyUpdate DateTime @default(now()) // Thời gian hồi thể lực
+  lastMessageTime  DateTime @default(now()) // Thời gian nhắn tin cuối cùng (chống spam)
+}
+
+// Bảng lưu trữ Túi đồ
+model InventoryItem {
+  id       Int    @id @default(autoincrement())
+  userId   String // ID Discord của chủ sở hữu
+  itemId   String // Mã vật phẩm (VD: diamond, cobblestone)
+  quantity Int    @default(1)
+  slot     Int    // Vị trí ô trong kho (1 -> 64)
+}
+
+// Bảng chứa các mặt hàng Schematic đang bán
+model SchematicItem {
+  id          String   @id @default(uuid())
+  sellerId    String   // ID người bán
+  title       String
+  description String
+  price       Float    // Giá bán
+  fileUrl     String   // Link tải file
+  imageUrls   String   // Chứa các link ảnh (Lưu dạng JSON string)
+}
+
+// Bảng chứa dữ liệu của Chợ Giao dịch bằng STK (Tiền thật)
+model RealMoneyMarketItem {
+  id          String   @id // Chứa mã postId (VD: YC-ABCDE)
+  sellerId    String   // ID người bán
+  title       String   // Tên công trình
+  price       String   // Giá tiền (Đã format có chữ VNĐ)
+  bankName    String   // Tên ngân hàng
+  bankInfo    String   // Số tài khoản
+  bankOwner   String   // Chủ tài khoản
+  fileUrl     String   // Link file vĩnh viễn
+  createdAt   DateTime @default(now())
+}

@@ -4,7 +4,7 @@ import { YCClient } from '../structures/YCClient';
 import { handleCreateTicket, handleSaveTicket, handleCloseTicket, handleDeleteTicket } from '../utils/ticketHandlers';
 import { handleVerifyRole } from '../utils/verifyHandlers';
 import { handleVoiceButtons, handleVoiceLimitModal, handleVoiceRenameModal } from '../utils/voiceHandlers';
-import { handleMarketBuy, handleMarketConfirm, handleMarketTicketControls, handleMarketPostModal } from '../utils/marketHandlers';
+import { handleMarketBuy, handleMarketConfirm, handleMarketTicketControls, handleMarketPostModal, handleMarketDeletePost } from '../utils/marketHandlers';
 import { handleEmbedMakerModal } from '../utils/embedHandlers';
 
 const InteractionCreateEvent: IEvent = {
@@ -76,6 +76,14 @@ const InteractionCreateEvent: IEvent = {
                 const postId = parts[2];
                 const sellerId = parts[3];
                 await handleMarketBuy(interaction as ButtonInteraction, postId, sellerId);
+                return;
+            }
+            
+            if (customId.startsWith('market_delpost_')) {
+                const parts = customId.split('_');
+                const postId = parts[2];
+                const sellerId = parts[3];
+                await handleMarketDeletePost(interaction as ButtonInteraction, postId, sellerId);
                 return;
             }
 

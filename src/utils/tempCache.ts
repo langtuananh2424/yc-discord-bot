@@ -1,0 +1,1 @@
+export const schematicCache = new Map<string, any>();

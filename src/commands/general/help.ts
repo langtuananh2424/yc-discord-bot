@@ -4,31 +4,23 @@ import { ICommand } from '../../interfaces/Command';
 const HelpCommand: ICommand = {
     data: new SlashCommandBuilder()
         .setName('yc-help')
-        .setDescription('Xem danh sách toàn bộ các lệnh của YC Bot'),
+        .setDescription('Xem danh sách toàn bộ các lệnh dành cho Thành viên'),
 
     async execute(interaction: ChatInputCommandInteraction) {
-        // Tạo một bảng Embed đẹp mắt để liệt kê các lệnh
+        // Tạo một bảng Embed đẹp mắt để liệt kê các lệnh cho Member
         const embed = new EmbedBuilder()
             .setTitle('🤖 Bảng Hướng Dẫn Sử Dụng YC Bot')
-            .setDescription('Dưới đây là danh sách toàn bộ các tính năng xịn sò mà Bot đang hỗ trợ cho cộng đồng **YC Studio**:')
+            .setDescription('Dưới đây là danh sách các tính năng mà bạn có thể trải nghiệm tại **YC Studio**:')
             .setColor(0x2B2D31) // Màu xám đen sang trọng giống màu nền Discord
             .setThumbnail(interaction.client.user?.displayAvatarURL() || null)
             .addFields(
                 { 
-                    name: '🛒 HỆ THỐNG SÀN GIAO DỊCH (MARKET)', 
-                    value: '`/yc-setup-market` - Cài đặt các kênh và role cho Sàn giao dịch (Admin)\n`/yc-market-post` - Mở form đăng bán công trình Schematic mới (Mọi người)' 
+                    name: '⛏️ HỆ THỐNG KINH TẾ (ĐÀO KHOÁNG)', 
+                    value: '`/mine` - Vác cúp đi đào khoáng sản (Tốn 1 Thể lực)\n`/inventory` - Kiểm tra túi đồ chứa chiến lợi phẩm\n`/balance` - Xem số dư YC Coin và Thể lực hiện tại\n`/market` - Xem bảng giá chứng khoán (khoáng sản) hôm nay\n`/sell` - Bán khoáng sản trong kho lấy YC Coin' 
                 },
                 { 
-                    name: '🔊 HỆ THỐNG PHÒNG THOẠI (JOIN-TO-CREATE)', 
-                    value: '`/yc-setup-voice` - Cài đặt kênh gốc để tự động tạo phòng Voice (Admin)' 
-                },
-                { 
-                    name: '🎫 HỆ THỐNG TICKET HỖ TRỢ', 
-                    value: '`/yc-setup-ticket` - Đặt bảng tạo Ticket tại kênh hiện tại (Admin)' 
-                },
-                { 
-                    name: '✅ HỆ THỐNG XÁC NHẬN LUẬT (VERIFY)', 
-                    value: '`/yc-setup-verify` - Đặt bảng xác nhận luật và tự động cấp Role (Admin)' 
+                    name: '🛒 HỆ THỐNG CHỢ SCHEMATIC', 
+                    value: '`/post-schematic` - Đăng bán file Schematic lên chợ (Giao dịch bằng YC Coin)\n`/del-schematic` - Gỡ bài đăng bán Schematic của bạn' 
                 },
                 { 
                     name: '📌 CÁC LỆNH CHUNG', 

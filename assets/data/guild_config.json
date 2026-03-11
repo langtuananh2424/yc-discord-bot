@@ -12,6 +12,8 @@
         "marketMmBankName": "TPBANK",
         "marketMmBankInfo": "99335036556",
         "marketMmBankOwner": "PHAM GIA KIEN",
-        "marketMmTransferContent": "buy"
+        "marketMmTransferContent": "buy",
+        "schematicMarketChannelId": "1480656198893043742",
+        "schematicStorageChannelId": "1480656454145937643"
     }
 }

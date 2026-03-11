@@ -17,6 +17,8 @@ export interface IGuildConfig {
     marketMmBankInfo?: string;
     marketMmTransferContent?: string;
     marketMmBankOwner?: string;
+    schematicMarketChannelId?: string; 
+    schematicStorageChannelId?: string;
 }
 
 // Hàm đọc cấu hình
