@@ -1,4 +1,4 @@
-import { Events, Interaction, ButtonInteraction } from 'discord.js';
+import { Events, Interaction, ButtonInteraction, MessageFlags } from 'discord.js';
 import { IEvent } from '../interfaces/Event';
 import { YCClient } from '../structures/YCClient';
 import { handleCreateTicket, handleSaveTicket, handleCloseTicket, handleDeleteTicket } from '../utils/ticketHandlers';
@@ -6,6 +6,8 @@ import { handleVerifyRole } from '../utils/verifyHandlers';
 import { handleVoiceButtons, handleVoiceLimitModal, handleVoiceRenameModal } from '../utils/voiceHandlers';
 import { handleMarketBuy, handleMarketConfirm, handleMarketTicketControls, handleMarketPostModal, handleMarketDeletePost } from '../utils/marketHandlers';
 import { handleEmbedMakerModal } from '../utils/embedHandlers';
+import { handleTournamentSetupModal } from '../utils/tournamentHandlers';
+import { executeCommandSafely, executeInteractionSafely } from '../utils/commandErrorWrapper';
 
 const InteractionCreateEvent: IEvent = {
     name: Events.InteractionCreate,
@@ -17,12 +19,7 @@ const InteractionCreateEvent: IEvent = {
             const command = client.commands.get(interaction.commandName);
             if (!command) return;
 
-            try {
-                await command.execute(interaction);
-            } catch (error) {
-                console.error(error);
-                if (!interaction.replied) await interaction.reply({ content: 'Đã có lỗi!', ephemeral: true });
-            }
+            await executeCommandSafely(interaction, () => command.execute(interaction));
         }
 
         // Xử lý Nút Bấm
@@ -36,37 +33,48 @@ const InteractionCreateEvent: IEvent = {
                 const categoryId = parts[2];
                 const roleId = parts[3];
                 const logChannelId = parts[4]; 
-                await handleCreateTicket(interaction as ButtonInteraction, 'Hỗ trợ', categoryId, roleId, logChannelId);
+                await executeInteractionSafely(interaction, 'handleCreateTicket', () =>
+                    handleCreateTicket(interaction as ButtonInteraction, 'Hỗ trợ', categoryId, roleId, logChannelId)
+                );
                 return; 
             }
 
             // Xử lý lưu Ticket
             if (customId.startsWith('ticket_save_')) {
                 const logChannelId = customId.split('_')[2]; 
-                await handleSaveTicket(interaction as ButtonInteraction, logChannelId);
+                await executeInteractionSafely(interaction, 'handleSaveTicket', () =>
+                    handleSaveTicket(interaction as ButtonInteraction, logChannelId)
+                );
                 return;
             }
 
             // Xử lý đóng và xóa
-            switch (customId) {
-                case 'ticket_close':
-                    await handleCloseTicket(interaction as ButtonInteraction);
-                    break;
-                case 'ticket_delete':
-                    await handleDeleteTicket(interaction as ButtonInteraction);
-                    break;
+            if (customId === 'ticket_close') {
+                await executeInteractionSafely(interaction, 'handleCloseTicket', () =>
+                    handleCloseTicket(interaction as ButtonInteraction)
+                );
+                return;
+            }
+
+            if (customId === 'ticket_delete') {
+                await executeInteractionSafely(interaction, 'handleDeleteTicket', () =>
+                    handleDeleteTicket(interaction as ButtonInteraction)
+                );
+                return;
             }
 
             if (customId.startsWith('verify_role_')) {
                 const roleId = customId.split('_')[2];
-
-                // Gọi hàm từ file utils và truyền dữ liệu sang
-                await handleVerifyRole(interaction as ButtonInteraction, roleId);
+                await executeInteractionSafely(interaction, 'handleVerifyRole', () =>
+                    handleVerifyRole(interaction as ButtonInteraction, roleId)
+                );
                 return;
             }
 
             if (customId.startsWith('vc_')) {
-                await handleVoiceButtons(interaction as ButtonInteraction);
+                await executeInteractionSafely(interaction, 'handleVoiceButtons', () =>
+                    handleVoiceButtons(interaction as ButtonInteraction)
+                );
                 return;
             }
 
@@ -75,7 +83,9 @@ const InteractionCreateEvent: IEvent = {
                 const parts = customId.split('_');
                 const postId = parts[2];
                 const sellerId = parts[3];
-                await handleMarketBuy(interaction as ButtonInteraction, postId, sellerId);
+                await executeInteractionSafely(interaction, 'handleMarketBuy', () =>
+                    handleMarketBuy(interaction as ButtonInteraction, postId, sellerId)
+                );
                 return;
             }
             
@@ -83,40 +93,60 @@ const InteractionCreateEvent: IEvent = {
                 const parts = customId.split('_');
                 const postId = parts[2];
                 const sellerId = parts[3];
-                await handleMarketDeletePost(interaction as ButtonInteraction, postId, sellerId);
+                await executeInteractionSafely(interaction, 'handleMarketDeletePost', () =>
+                    handleMarketDeletePost(interaction as ButtonInteraction, postId, sellerId)
+                );
                 return;
             }
 
             // NÚT XÁC NHẬN GIAO DỊCH TRUNG GIAN
             if (customId.startsWith('market_confirm_')) {
-                await handleMarketConfirm(interaction as ButtonInteraction);
+                await executeInteractionSafely(interaction, 'handleMarketConfirm', () =>
+                    handleMarketConfirm(interaction as ButtonInteraction)
+                );
                 return;
             }
 
-            if (['market_close', 'market_transcript', 'market_delete'].includes(customId)) {
-                await handleMarketTicketControls(interaction as ButtonInteraction);
-            return;
+            // NÚT TICKET CONTROLS
+            if (customId.startsWith('ticket_')) {
+                await executeInteractionSafely(interaction, 'handleMarketTicketControls', () =>
+                    handleMarketTicketControls(interaction as ButtonInteraction)
+                );
+                return;
             }
-
-            
         }
 
+        // Xử lý Modal Submit
         if (interaction.isModalSubmit()) {
             switch (interaction.customId) {
                 case 'modal_vc_rename':
-                    await handleVoiceRenameModal(interaction);
+                    await executeInteractionSafely(interaction, 'handleVoiceRenameModal', () =>
+                        handleVoiceRenameModal(interaction)
+                    );
                     break;
 
                 case 'modal_vc_limit':
-                    await handleVoiceLimitModal(interaction);
+                    await executeInteractionSafely(interaction, 'handleVoiceLimitModal', () =>
+                        handleVoiceLimitModal(interaction)
+                    );
                     break;
 
                 case 'market_post_modal':
-                    await handleMarketPostModal(interaction);
+                    await executeInteractionSafely(interaction, 'handleMarketPostModal', () =>
+                        handleMarketPostModal(interaction)
+                    );
                     break;
 
                 case 'embed_maker_modal':
-                    await handleEmbedMakerModal(interaction);
+                    await executeInteractionSafely(interaction, 'handleEmbedMakerModal', () =>
+                        handleEmbedMakerModal(interaction)
+                    );
+                    break;
+
+                case 'modal_setup_tournament':
+                    await executeInteractionSafely(interaction, 'handleTournamentSetupModal', () =>
+                        handleTournamentSetupModal(interaction as any)
+                    );
                     break;
                     
                 default:

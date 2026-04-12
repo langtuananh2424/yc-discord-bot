@@ -1,6 +1,6 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction, PermissionFlagsBits, ChannelType } from 'discord.js';
 import { ICommand } from '../../interfaces/Command';
-import { saveGuildConfig } from '../../utils/guildConfigHelper'; // 👈 Import hàm lưu cấu hình
+import { saveGuildConfig } from '../../utils/guildConfigHelper';
 
 const SetupMarketCommand: ICommand = {
     data: new SlashCommandBuilder()

@@ -69,7 +69,6 @@ export async function handleMarketPostModal(interaction: any) {
             .setFooter({ text: `Mã bài viết: ${postId} | YC Studio Marketplace` })
             .setTimestamp();
 
-        // ĐÃ SỬA: Thêm nút Xóa Bài kế bên nút Mua Ngay
         const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
             new ButtonBuilder().setCustomId(`market_buy_${postId}_${interaction.user.id}`).setLabel('🛒 Mua Ngay').setStyle(ButtonStyle.Success),
             new ButtonBuilder().setCustomId(`market_delpost_${postId}_${interaction.user.id}`).setLabel('🗑️ Xóa Bài').setStyle(ButtonStyle.Danger)

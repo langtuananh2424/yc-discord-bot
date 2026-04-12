@@ -19,6 +19,11 @@ export interface IGuildConfig {
     marketMmBankOwner?: string;
     schematicMarketChannelId?: string; 
     schematicStorageChannelId?: string;
+    tournamentTitle?: string;
+    tournamentDesc?: string;
+    tournamentColor?: string;
+    tournamentImage?: string;
+    tournamentFooter?: string;
 }
 
 // Hàm đọc cấu hình

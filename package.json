@@ -7,7 +7,9 @@
     "dev": "nodemon --ignore 'assets/data/*' --exec ts-node src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "register": "ts-node src/deploy-commands.ts"
+    "register": "ts-node src/deploy-commands.ts",
+    "health-check": "ts-node health-check.ts",
+    "deploy": "bash deploy.sh"
   },
   "keywords": [],
   "author": "",

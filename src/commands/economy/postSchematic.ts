@@ -5,15 +5,13 @@ import { schematicCache } from '../../utils/tempCache';
 const PostSchematicCommand: ICommand = {
     data: new SlashCommandBuilder()
         .setName('post-schematic')
-        .setDescription('Đăng bán file Schematic lên chợ')
-        .addStringOption(opt => opt.setName('title').setDescription('Tên công trình').setRequired(true))
+        .setDescription('Chia sẻ file Schematic miễn phí cho cộng đồng')
         .addAttachmentOption(opt => opt.setName('file').setDescription('File .schem hoặc .litematic').setRequired(true))
         .addAttachmentOption(opt => opt.setName('image1').setDescription('Ảnh minh họa 1').setRequired(true))
         .addAttachmentOption(opt => opt.setName('image2').setDescription('Ảnh minh họa 2').setRequired(false))
         .addAttachmentOption(opt => opt.setName('image3').setDescription('Ảnh minh họa 3').setRequired(false)),
 
     async execute(interaction: ChatInputCommandInteraction) {
-        const title = interaction.options.getString('title', true);
         const file = interaction.options.getAttachment('file', true);
         
         const images = [];
@@ -23,7 +21,6 @@ const PostSchematicCommand: ICommand = {
         }
 
         schematicCache.set(interaction.user.id, { 
-            title, 
             fileUrl: file.url, 
             fileName: file.name,
             images: images 
@@ -31,14 +28,23 @@ const PostSchematicCommand: ICommand = {
 
         const modal = new ModalBuilder()
             .setCustomId('modal_schematic_sell')
-            .setTitle('Thông tin mở bán Schematic');
+            .setTitle('Chia sẻ Schematic');
 
-        const descInput = new TextInputBuilder().setCustomId('desc').setLabel('Mô tả công trình').setStyle(TextInputStyle.Paragraph).setRequired(true);
-        const priceInput = new TextInputBuilder().setCustomId('price').setLabel('Giá bán (YC Coin)').setStyle(TextInputStyle.Short).setRequired(true);
+        const titleInput = new TextInputBuilder()
+            .setCustomId('title')
+            .setLabel('Tên công trình')
+            .setStyle(TextInputStyle.Short)
+            .setRequired(true);
+
+        const descInput = new TextInputBuilder()
+            .setCustomId('desc')
+            .setLabel('Mô tả công trình')
+            .setStyle(TextInputStyle.Paragraph)
+            .setRequired(true);
 
         modal.addComponents(
-            new ActionRowBuilder<TextInputBuilder>().addComponents(descInput),
-            new ActionRowBuilder<TextInputBuilder>().addComponents(priceInput)
+            new ActionRowBuilder<TextInputBuilder>().addComponents(titleInput),
+            new ActionRowBuilder<TextInputBuilder>().addComponents(descInput)
         );
 
         await interaction.showModal(modal);

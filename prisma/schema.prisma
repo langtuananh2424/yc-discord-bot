@@ -31,7 +31,7 @@ model SchematicItem {
   sellerId    String   // ID người bán
   title       String
   description String
-  price       Float    // Giá bán
+//  price       Float
   fileUrl     String   // Link tải file
   imageUrls   String   // Chứa các link ảnh (Lưu dạng JSON string)
 }

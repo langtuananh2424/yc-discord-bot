@@ -14,6 +14,11 @@
         "marketMmBankOwner": "PHAM GIA KIEN",
         "marketMmTransferContent": "buy",
         "schematicMarketChannelId": "1480656198893043742",
-        "schematicStorageChannelId": "1480656454145937643"
+        "schematicStorageChannelId": "1480656454145937643",
+        "tournamentTitle": "AO LÀNG BUILDER VIỆT NAM",
+        "tournamentDesc": "Dưới đây là một số thông tin quan trọng dành cho thí sinh:\n- Thí sinh vui lòng tuân thủ tuyệt đối nội quy và tiêu chí chấm điểm của BTC.\n- Chỉ thực hiện tác phẩm trong phạm vi 150x150 theo đúng Template mẫu.\n- Nội quy & Nội dung: https://docs.google.com/document/d/1v0lcgJs_R0p-TWu2aOG8LjqCD6q011j6ezHMJDJeYB8/edit?usp=drivesdk\n- Template cuộc thi: https://drive.google.com/drive/folders/1zJnyIDYRDXnvWedq2mPIDYLiUTzGVVUa?usp=sharing",
+        "tournamentColor": "#F1C40F",
+        "tournamentImage": "https://cdn.discordapp.com/attachments/1086262460740288522/1481351075675115620/647381944_1589066605533118_1628779171004497387_n.png?ex=69b2ff32&is=69b1adb2&hm=cf14ab2de759fd748b57c826b01c78f9b2155d07cac886e6c5649128edc94ebb&",
+        "tournamentFooter": "Chúc các bạn có một hành trình sáng tạo thú vị và đạt kết quả cao nhất tại sân chơi của YC Studio! 🌟"
     }
 }

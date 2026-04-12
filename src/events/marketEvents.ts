@@ -10,7 +10,7 @@ const MarketEvents: IEvent = {
     async execute(interaction: Interaction) {
         
         // ==========================================
-        // 1. KHI NGƯỜI BÁN NỘP FORM ĐĂNG BÀI
+        // 1. KHI NGƯỜI DÙNG NỘP FORM CHIA SẺ
         // ==========================================
         if (interaction.isModalSubmit() && interaction.customId === 'modal_schematic_sell') {
             await interaction.deferReply({ ephemeral: true });
@@ -22,15 +22,17 @@ const MarketEvents: IEvent = {
                 return;
             }
 
+            // LẤY TITLE VÀ DESC TỪ FORM
+            const title = interaction.fields.getTextInputValue('title');
             const desc = interaction.fields.getTextInputValue('desc');
-            const price = parseFloat(interaction.fields.getTextInputValue('price'));
-
-            if (isNaN(price) || price <= 0) { await interaction.editReply('❌ Giá bán phải lớn hơn 0!'); return; }
 
             const cacheData = schematicCache.get(interaction.user.id);
-            if (!cacheData) { await interaction.editReply('❌ Mất dữ liệu File! Vui lòng gõ lại lệnh `/post-schematic`.'); return; }
+            if (!cacheData) { 
+                await interaction.editReply('❌ Mất dữ liệu File! Vui lòng gõ lại lệnh `/post-schematic`.'); 
+                return; 
+            }
 
-            // BACKUP FILE SANG KÊNH BÍ MẬT
+            // BACKUP FILE SANG KÊNH BÍ MẬT ĐỂ LẤY LINK VĨNH VIỄN
             const storageChannel = await interaction.client.channels.fetch(serverConfig.schematicStorageChannelId) as TextChannel;
             
             const filesToUpload = [
@@ -39,20 +41,19 @@ const MarketEvents: IEvent = {
             ];
 
             const backupMessage = await storageChannel.send({
-                content: `📦 Backup File từ <@${interaction.user.id}> - ${cacheData.title}`,
+                content: `📦 Backup File từ <@${interaction.user.id}> - ${title}`,
                 files: filesToUpload
             });
 
-            const permanentFileUrl = backupMessage.attachments.find(a => a.name === cacheData.fileName)?.url || cacheData.fileUrl;
-            const permanentImageUrls = backupMessage.attachments.filter(a => a.name !== cacheData.fileName).map(a => a.url);
+            const permanentFileUrl = backupMessage.attachments.find((a: any) => a.name === cacheData.fileName)?.url || cacheData.fileUrl;
+            const permanentImageUrls = backupMessage.attachments.filter((a: any) => a.name !== cacheData.fileName).map((a: any) => a.url);
 
-            // LƯU VÀO DATABASE (Đã xóa expiresAt)
+            // LƯU VÀO DATABASE ĐỂ QUẢN LÝ VIỆC XÓA BÀI SAU NÀY
             const newListing = await prisma.schematicItem.create({
                 data: {
                     sellerId: interaction.user.id,
-                    title: cacheData.title,
+                    title: title,
                     description: desc,
-                    price: price,
                     fileUrl: permanentFileUrl,
                     imageUrls: JSON.stringify(permanentImageUrls)
                 }
@@ -60,72 +61,38 @@ const MarketEvents: IEvent = {
 
             schematicCache.delete(interaction.user.id);
 
-            // ĐĂNG BÀI LÊN CHỢ
+            // ĐĂNG BÀI LÊN KÊNH CHIA SẺ
             const marketChannel = await interaction.client.channels.fetch(serverConfig.schematicMarketChannelId);
             
             const embed = new EmbedBuilder()
-                .setTitle(`🛒 ${cacheData.title}`)
-                .setDescription(`**Mô tả:** ${desc}\n\n**💵 Giá bán:** \`${price}\` YC Coin\n**👤 Người bán:** <@${interaction.user.id}>`)
-                .setColor(0x3498DB)
+                .setTitle(`🎁 ${title}`)
+                .setDescription(`**Mô tả:** ${desc}\n\n**👤 Người chia sẻ:** <@${interaction.user.id}>`)
+                .setColor(0x2ECC71)
                 .setImage(permanentImageUrls[0] || null)
-                .setFooter({ text: `Mã ID: ${newListing.id}` }); // Giữ lại Footer chứa ID để sau dùng lệnh xóa
+                .setFooter({ text: `Mã ID: ${newListing.id}` });
 
+            // NÚT LINK TẢI TRỰC TIẾP VÀ NÚT XÓA BÀI
             const buttons = new ActionRowBuilder<ButtonBuilder>().addComponents(
-                new ButtonBuilder().setCustomId(`buy_schem_${newListing.id}`).setLabel(`Mua ngay (${price} YC)`).setStyle(ButtonStyle.Success).setEmoji('🛒'),
+                new ButtonBuilder().setLabel(`Tải xuống miễn phí`).setStyle(ButtonStyle.Link).setURL(permanentFileUrl).setEmoji('📥'),
                 new ButtonBuilder().setCustomId(`del_schem_${newListing.id}`).setLabel('Xóa bài').setStyle(ButtonStyle.Danger).setEmoji('🗑️')
             );
 
             if (marketChannel?.type === ChannelType.GuildText) {
-                await marketChannel.send({ embeds: [embed], components: [buttons] });
+                await (marketChannel as TextChannel).send({ embeds: [embed], components: [buttons] });
             } else if (marketChannel?.type === ChannelType.GuildForum) {
                 await (marketChannel as any).threads.create({
-                    name: `🛒 ${cacheData.title}`,
-                    autoArchiveDuration: ThreadAutoArchiveDuration.ThreeDays, // Thread sẽ tự ẩn sau 3 ngày nếu không ai chat, nhưng bài viết trong Database vẫn sống mãi mãi.
+                    name: `🎁 ${title}`,
+                    autoArchiveDuration: ThreadAutoArchiveDuration.ThreeDays,
                     message: { embeds: [embed], components: [buttons] }
                 });
             }
 
-            await interaction.editReply(`✅ Đăng bài thành công lên Chợ! Bài viết của bạn sẽ tồn tại vĩnh viễn (Miễn phí hoàn toàn).`);
+            await interaction.editReply(`✅ Chia sẻ thành công! File của bạn đã được đăng lên cộng đồng.`);
             return;
         }
 
         // ==========================================
-        // 2. KHI NGƯỜI MUA BẤM NÚT "MUA NGAY"
-        // ==========================================
-        if (interaction.isButton() && interaction.customId.startsWith('buy_schem_')) {
-            await interaction.deferReply({ ephemeral: true });
-
-            const listingId = interaction.customId.replace('buy_schem_', '');
-            const listing = await prisma.schematicItem.findUnique({ where: { id: listingId } });
-
-            // Đã xóa check Hết hạn ở đây
-            if (!listing) { await interaction.editReply('❌ Bài viết không tồn tại hoặc đã bị gỡ!'); return; }
-            if (listing.sellerId === interaction.user.id) { await interaction.editReply('❌ Bạn không thể tự mua đồ của chính mình!'); return; }
-
-            let buyerDb = await prisma.user.findUnique({ where: { id: interaction.user.id } });
-            if (!buyerDb || buyerDb.coins < listing.price) {
-                await interaction.editReply(`❌ Tài khoản của bạn không đủ tiền! (Cần ${listing.price} YC)`); return;
-            }
-
-            await prisma.user.update({ where: { id: interaction.user.id }, data: { coins: { decrement: listing.price } } });
-            await prisma.user.update({ where: { id: listing.sellerId }, data: { coins: { increment: listing.price } } });
-
-            try {
-                const dmEmbed = new EmbedBuilder()
-                    .setTitle(`📦 Giao hàng: ${listing.title}`)
-                    .setDescription(`Cảm ơn bạn đã mua hàng! Dưới đây là link tải Schematic của bạn:\n\n📥 **[TẢI XUỐNG SCHEMATIC BẤM VÀO ĐÂY](${listing.fileUrl})**`)
-                    .setColor(0x2ECC71);
-
-                await interaction.user.send({ embeds: [dmEmbed] });
-                await interaction.editReply('✅ Mua thành công! File đã được gửi vào Tin nhắn riêng (DM) của bạn.');
-            } catch (error) {
-                await interaction.editReply(`✅ Mua thành công! Nhưng bạn đang CHẶN tin nhắn riêng. Tải file tại đây: [Tải File](${listing.fileUrl})`);
-            }
-            return;
-        }
-
-        // ==========================================
-        // 3. KHI NGƯỜI DÙNG BẤM NÚT "XÓA BÀI"
+        // 2. KHI NGƯỜI DÙNG BẤM NÚT "XÓA BÀI"
         // ==========================================
         if (interaction.isButton() && interaction.customId.startsWith('del_schem_')) {
             const listingId = interaction.customId.replace('del_schem_', '');
