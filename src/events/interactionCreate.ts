@@ -148,7 +148,8 @@ const InteractionCreateEvent: IEvent = {
                         handleTournamentSetupModal(interaction as any)
                     );
                     break;
-                    
+                case 'modal_schematic_sell':
+                    return;
                 default:
                     console.warn(`Chưa có handler cho Modal: ${interaction.customId}`);
                     break;

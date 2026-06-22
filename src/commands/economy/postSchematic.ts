@@ -40,7 +40,7 @@ const PostSchematicCommand: ICommand = {
             .setCustomId('desc')
             .setLabel('Mô tả công trình')
             .setStyle(TextInputStyle.Paragraph)
-            .setRequired(true);
+            .setRequired(false);
 
         modal.addComponents(
             new ActionRowBuilder<TextInputBuilder>().addComponents(titleInput),

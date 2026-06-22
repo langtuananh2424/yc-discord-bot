@@ -34,6 +34,7 @@ model SchematicItem {
 //  price       Float
   fileUrl     String   // Link tải file
   imageUrls   String   // Chứa các link ảnh (Lưu dạng JSON string)
+  backupMsgId String?
 }
 
 // Bảng chứa dữ liệu của Chợ Giao dịch bằng STK (Tiền thật)
