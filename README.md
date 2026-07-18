@@ -62,7 +62,7 @@ Mỗi khi thêm lệnh mới, chạy lệnh này để đẩy cấu trúc lên D
 1. Phân Quyền Vai Trò (Role Hierarchy)
 
 Để tính năng Verify (cấp role) hoạt động, bạn BẮT BUỘC phải vào Cài đặt Máy chủ -> Vai trò và kéo Role của YC Bot nằm CAO HƠN các Role mà bot sẽ cấp (VD: @Member, @Builder). Nếu bot nằm dưới, nó sẽ báo lỗi không thể cấp quyền.
-2. Cấp Quyền Cho Bot (Permissions)
+2. **Cấp Quyền Cho Bot (Permissions)**
 
 Đảm bảo Role của Bot có các quyền sau:
 
@@ -72,7 +72,7 @@ Mỗi khi thêm lệnh mới, chạy lệnh này để đẩy cấu trúc lên D
 
     Move Members (Di chuyển Thành viên) - Để bế người dùng sang phòng Voice mới tạo.
 
-3. Bật Intents (Developer Portal)
+3. **Bật Intents (Developer Portal)**
 
 Truy cập trang quản lý Bot của Discord, vào mục Bot, cuộn xuống phần Privileged Gateway Intents và BẬT XANH các mục sau:
 
