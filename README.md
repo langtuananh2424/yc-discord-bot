@@ -59,7 +59,7 @@ Mỗi khi thêm lệnh mới, chạy lệnh này để đẩy cấu trúc lên D
 5. **Bật Bot và chờ hệ thống tự chạy npm install**
 
 ## ⚠️ CÁC LƯU Ý ĐẶC BIỆT QUAN TRỌNG (CẦN ĐỌC)
-1. **Phân Quyền Vai Trò (Role Hierarchy)**
+1. Phân Quyền Vai Trò (Role Hierarchy)
 
 Để tính năng Verify (cấp role) hoạt động, bạn BẮT BUỘC phải vào Cài đặt Máy chủ -> Vai trò và kéo Role của YC Bot nằm CAO HƠN các Role mà bot sẽ cấp (VD: @Member, @Builder). Nếu bot nằm dưới, nó sẽ báo lỗi không thể cấp quyền.
 2. **Cấp Quyền Cho Bot (Permissions)**

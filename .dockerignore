@@ -1,0 +1,62 @@
+# Docker Deployment Guide for bot-hosting.net
+
+Ignore node_modules, logs, and unnecessary files to keep Docker image small.
+This speeds up building and deployment.
+
+# Dependencies & Build Files
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Build Output (will be recreated)
+dist/
+
+# Environment (use .env from upload)
+.env.local
+.env.*.local
+
+# Version Control
+.git/
+.gitignore
+.github/
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Development
+dev.db
+dev.db-journal
+
+# Old deployments & backups
+deployment.zip
+release.zip
+*.zip
+backup/
+old/
+
+# Prisma
+prisma/dev.db
+.prisma/
+
+# Temp files
+temp/
+tmp/
+*.tmp
+
+# Testing & Coverage
+coverage/
+test-results/
+
+# Documentation (optional - keep QUICK_START.md if helpful)
+*.md
+!README.md
+
+# System files
+Thumbs.db

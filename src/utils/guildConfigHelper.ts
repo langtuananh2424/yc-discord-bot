@@ -7,7 +7,23 @@ export interface IGuildConfig {
     welcomeChannelId?: string;
     ticketLogChannelId?: string;
     jtcChannelId?: string;
-    // Sau có thể thêm ticketLogChannelId, supportRoleId
+    marketChannelId?: string;
+    marketCategoryId?: string;
+    marketSupervisorRoleId?: string;
+    marketArchiveChannelId?: string;
+    marketLogChannelId?: string;
+    marketSellerRoleId?: string;
+    marketMmBankName?: string;
+    marketMmBankInfo?: string;
+    marketMmTransferContent?: string;
+    marketMmBankOwner?: string;
+    schematicMarketChannelId?: string; 
+    schematicStorageChannelId?: string;
+    tournamentTitle?: string;
+    tournamentDesc?: string;
+    tournamentColor?: string;
+    tournamentImage?: string;
+    tournamentFooter?: string;
 }
 
 // Hàm đọc cấu hình

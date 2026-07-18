@@ -1,0 +1,17 @@
+-- CreateTable
+CREATE TABLE "User" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "coins" REAL NOT NULL DEFAULT 0.0,
+    "energy" INTEGER NOT NULL DEFAULT 64,
+    "lastEnergyUpdate" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "lastMessageTime" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- CreateTable
+CREATE TABLE "InventoryItem" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "userId" TEXT NOT NULL,
+    "itemId" TEXT NOT NULL,
+    "quantity" INTEGER NOT NULL DEFAULT 1,
+    "slot" INTEGER NOT NULL
+);
